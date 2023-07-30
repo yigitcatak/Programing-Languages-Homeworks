@@ -1,0 +1,30 @@
+Type mismatch on 6
+Type mismatch on 7
+Result of expression on 7 is (11.5)
+Type mismatch on 8
+Type mismatch on 9
+Result of expression on 9 is (6.8)
+Type mismatch on 10
+Type mismatch on 11
+Result of expression on 11 is (Test String!)
+Type mismatch on 16
+Type mismatch on 17
+Result of expression on 25 is (Hello World!)
+Result of expression on 30 is (25.0)
+Result of expression on 31 is (-3.4)
+Result of expression on 32 is (3.0)
+Result of expression on 33 is (1)
+Result of expression on 34 is (2.7)
+Result of expression on 35 is (6.8)
+Result of expression on 36 is (Test String!)
+Result of expression on 38 is (ABAB)
+Result of expression on 40 is (2)
+Result of expression on 45 is (4)
+Type mismatch on 46
+Result of expression on 46 is (CA)
+Result of expression on 49 is (1)
+Result of expression on 50 is (3)
+Result of expression on 51 is (AB)
+Result of expression on 52 is (TTT)
+Result of expression on 54 is (3)
+Result of expression on 57 is (5)

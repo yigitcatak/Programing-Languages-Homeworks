@@ -1,0 +1,69 @@
+%{
+#include "yigitcatak-hw3.h"
+#include "yigitcatak-hw3.tab.h" 
+
+unsigned int lineCount = 1;
+%}
+%%
+
+["]Get["]		        return tGET;
+["]Set["]		        return tSET;
+["]Function["]		    return tFUNCTION;
+["]Print["]		        return tPRINT;
+["]If["]		        return tIF;
+["]Return["]		    return tRETURN;
+
+["]"+"["]               return tADD;
+["]"-"["]               return tSUB;
+["]"*"["]               return tMUL;
+["]"/"["]               return tDIV;
+["]"++"["]		        return tINC;
+["]">"["]		        return tGT;
+["]"=="["]		        return tEQUALITY;
+["]"--"["]		        return tDEC;
+["]"<"["]		        return tLT;
+["]"<="["]		        return tLEQ;
+["]">="["]		        return tGEQ;
+
+
+["][_a-zA-Z][a-zA-Z0-9_]*["]	    return tIDENT;
+
+['][^']*['] {
+    char *result = (char *)malloc(strlen(yytext) - 1); // -2 for length + 1 for null terminator
+    strncpy(result,yytext+1,strlen(yytext) - 2);
+    result[strlen(yytext) - 2] = '\0';
+    yylval.dataNode.lineNum = lineCount;
+    yylval.dataNode.value = result;
+    yylval.dataNode.dtype = dstring;
+    yylval.dataNode.parent2 = yylval.dataNode.parent1 = NULL;
+    return tSTRING;
+}
+
+[0-9]+ |
+-[0-9]+ {
+    char *result = (char *)malloc(strlen(yytext));
+    strcpy(result,yytext);
+    yylval.dataNode.lineNum = lineCount;
+    yylval.dataNode.value = result;
+    yylval.dataNode.dtype = dint;
+    yylval.dataNode.parent2 = yylval.dataNode.parent1 = NULL;
+    return tNUM;
+}                           
+
+[0-9]+"."[0-9]+ |
+-[0-9]+"."[0-9]+ {
+    char *result = (char *)malloc(strlen(yytext));
+    strcpy(result,yytext);
+    yylval.dataNode.lineNum = lineCount;
+    yylval.dataNode.value = result;
+    yylval.dataNode.dtype = dfloat;
+    yylval.dataNode.parent2 = yylval.dataNode.parent1 = NULL;    
+    return tNUM;
+}
+
+\n  lineCount++;
+
+[ \t\r]+ 
+.			return yytext[0];
+
+%%

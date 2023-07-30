@@ -1,0 +1,1 @@
+(load "s6.scm") (repl '()) (define x 0) (if x (+ 3 3) (- 0 2))

@@ -1,0 +1,81 @@
+%{
+unsigned int lc = 1;
+%}
+
+%%
+\"Get\" printf("%d tGET\n",lc);
+\"Set\" printf("%d tSET\n",lc);
+\"Function\" printf("%d tFUNCTION\n",lc);
+\"Print\" printf("%d tPRINT\n",lc);
+\"For\" printf("%d tGet\n",lc);
+\"If\" printf("%d tIF\n",lc);
+\"Return\" printf("%d tRETURN\n",lc);
+
+,  printf("%d tCOMMA\n",lc);
+\"\+\"  printf("%d tPLUS\n",lc);
+\"\*\"  printf("%d tMUL\n",lc);
+\"\+\+\"  printf("%d tINC\n",lc);
+\[ printf("%d tLBRAC\n",lc);
+\">\"  printf("%d tGT\n",lc);
+\">=\"  printf("%d tGEQ\n",lc);
+\"==\"  printf("%d tEQUALITY\n",lc);
+\"-\"  printf("%d tMINUS\n",lc);
+\"\/\"  printf("%d tDIV\n",lc);
+\"--\"  printf("%d tDEC\n",lc);
+]  printf("%d tRBRAC\n",lc);
+\"<\"  printf("%d tLT\n",lc);
+\"<=\"  printf("%d tLEQ\n",lc);
+
+\"[-_a-zA-Z][-_a-zA-Z0-9]*\" printf("%d tIDENT (%.*s)\n", lc, strlen(yytext)-2, yytext+1);
+
+-?([0-9]+\.[0-9]+|[0-9]+) {
+    int first_non_zero = -1, last_non_zero = -1, point;
+    char isNegative = (yytext[0] == '-') ? 1 : 0, isFloat = 0;
+    unsigned int i = isNegative;
+    
+    for (; i < yyleng; i++) {
+        if (yytext[i] == '.') {
+            point = i;
+            isFloat = 1; 
+            if (first_non_zero == -1) {
+                first_non_zero = i-1;
+            }
+        }
+        else if (yytext[i] != '0') {
+            if (first_non_zero == -1) {
+                first_non_zero = i;
+            }
+            last_non_zero = i;
+        }
+    }
+    if (isFloat && (last_non_zero < point))
+        last_non_zero = point + 1;
+
+    if (first_non_zero == -1)
+        printf("%d tNUM (%s) (%s0)\n", lc, yytext, isNegative ? "-" : "");
+    else
+        printf("%d tNUM (%s) (%s%.*s)\n", lc, yytext, isNegative ? "-" : "", last_non_zero-first_non_zero+1, yytext+first_non_zero);
+}
+
+'[^']*' {
+    printf("%d tSTRING (%.*s)\n", lc, strlen(yytext)-2, yytext+1);
+
+    unsigned int i = 0;
+    for (; i < yyleng; i++) {
+        if (yytext[i] == '\n') {
+            lc++;
+        }
+    }
+}
+
+\n lc++;
+[ \t\r] printf("");
+. printf("%d ILLEGAL CHARACTER (%s)\n", lc, yytext);
+
+%%
+
+int yywrap(){}
+int main(){
+yylex();
+return(0);
+}
